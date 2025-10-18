@@ -1,0 +1,24 @@
+# Import required libraries
+import rsa      # For RSA key generation, signing, and verification
+import hashlib  # For computing MD5 hash of the message
+
+# Step 1: Generate RSA public and private keys (512-bit for demonstration)
+public_key, private_key = rsa.newkeys(512)
+
+# Step 2: Define the original message to be signed
+message = b"Hello, this is a test message."
+
+# Step 3: Compute MD5 hash of the message
+hash_md5 = hashlib.md5(message).digest()
+print("MD5 Hash:", hash_md5.hex())  # Display the hash in hexadecimal format
+
+# Step 4: Sign the MD5 hash using the private key
+signature = rsa.sign_hash(hash_md5, private_key, 'MD5')
+print("Digital Signature (signed MD5):", signature.hex())  # Display the signature
+
+# Step 5: Verify the signature using the public key
+try:
+    rsa.verify(message, signature, public_key)  # Checks if the signature matches the message
+    print("Signature is authentic.")             # If verification succeeds
+except rsa.VerificationError:
+    print("Signature is NOT authentic.")         # If verification fails
